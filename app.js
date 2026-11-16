@@ -7,7 +7,7 @@ const boostLeft=until=>{const s=Math.max(0,Math.ceil((until-Date.now())/1000));r
 const app={config:null,me:null,tab:'game',category:'Barchasi',query:'',cart:{},couponCode:'',fulfillment:'delivery',orderNote:'',quote:null,quoteBusy:false,quoteError:'',quoteSerial:0,profileView:'overview',busy:false,pendingTaps:0,tapTimer:null};
 const toast=msg=>{const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.classList.remove('show'),3500);};
 async function request(path,payload){
-  const response=await fetch(path,{method:payload===undefined?'GET':'POST',headers:{'Content-Type':'application/json','X-Sariq-Client':'1'},credentials:'same-origin',body:payload===undefined?undefined:JSON.stringify(payload)});
+  const response=await fetch(sariqApiUrl(path),{method:payload===undefined?'GET':'POST',headers:{'Content-Type':'application/json','X-Sariq-Client':'1'},credentials:'include',body:payload===undefined?undefined:JSON.stringify(payload)});
   let data={};try{data=await response.json();}catch{}
   if(!response.ok)throw Error(data.error||`Server xatosi (${response.status})`);
   return data;

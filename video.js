@@ -48,7 +48,7 @@ async function videoLoad(index){
   const container=document.getElementById('videoStream');if(!container)return;
   const already=v.rewardedToday||shorts.earnedToday>=shorts.dailyLimit;
   container.innerHTML=`<div class="video-player">
-     <video id="shortVideo" playsinline webkit-playsinline preload="metadata" muted src="${videoEsc(v.url)}"></video>
+     <video id="shortVideo" playsinline webkit-playsinline preload="metadata" muted src="${videoEsc(sariqApiUrl(v.url))}"></video>
      <div class="video-time"><b id="videoWatched">Ko‘rildi 0/${v.durationSeconds} s</b><div class="video-progress"><div id="videoProgress" style="width:0%"></div></div></div>
      <div class="video-play-pause" id="pauseGlyph" aria-hidden="true">▶</div>
      <button class="video-tap-catcher" data-video-action="play" aria-label="Videoni pauza qilish yoki davom ettirish"></button>

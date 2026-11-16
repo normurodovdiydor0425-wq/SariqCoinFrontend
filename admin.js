@@ -1,10 +1,11 @@
 'use strict';
+const sariqApiUrl=path=>new URL(path,window.SARIQ_API_BASE||(location.hostname==='localhost'||location.hostname==='127.0.0.1'?location.origin:'https://sariqcoinbackend.onrender.com')).toString();
 const $=s=>document.querySelector(s),escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const money=n=>Number(n||0).toLocaleString('en-US')+' so‘m';
 const num=n=>Number(n||0).toLocaleString('en-US');
 const toast=msg=>{const el=$('#toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3500)};
 let overview, videoAdmin;
-async function api(path,data){const res=await fetch(path,{method:data===undefined?'GET':'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','X-Sariq-Client':'1'},body:data===undefined?undefined:JSON.stringify(data)});const json=await res.json();if(!res.ok)throw Error(json.error||`HTTP ${res.status}`);return json;}
+async function api(path,data){const res=await fetch(sariqApiUrl(path),{method:data===undefined?'GET':'POST',credentials:'include',headers:{'Content-Type':'application/json','X-Sariq-Client':'1'},body:data===undefined?undefined:JSON.stringify(data)});const json=await res.json();if(!res.ok)throw Error(json.error||`HTTP ${res.status}`);return json;}
 const rows=(data,make)=>data.length?data.map(make).join(''):'<tr><td colspan="8">Hozircha ma’lumot yo‘q</td></tr>';
 function render(){const o=overview,s=o.stats;
   $('#admin').innerHTML=`<header class="admin-head"><div><h1>🛡 Sariq Coin — Admin</h1><p class="sub">Admin ID: ${escape(o.adminId)} • @${escape(o.adminUsername)} • Demo hisobot</p></div><div class="hero-actions"><a class="btn secondary" href="/?demo=admin" style="text-decoration:none">← Mini App</a><button class="btn" data-action="refresh">Yangilash</button></div></header>
@@ -63,7 +64,7 @@ async function uploadVideo(e){
  const status=document.getElementById('video-upload-status');if(status)status.textContent='Video serverga yuklanyapti, kuting…';
  const submit=form.querySelector('button[type=submit]');submit.disabled=true;
  try{
-   const response=await fetch('/api/admin/videos/upload?'+params,{method:'POST',credentials:'same-origin',headers:{'X-Sariq-Client':'1','Content-Type':file.type|| (file.name.toLowerCase().endsWith('.webm')?'video/webm':'video/mp4')},body:file});
+   const response=await fetch(sariqApiUrl('/api/admin/videos/upload?'+params),{method:'POST',credentials:'include',headers:{'X-Sariq-Client':'1','Content-Type':file.type|| (file.name.toLowerCase().endsWith('.webm')?'video/webm':'video/mp4')},body:file});
    const data=await response.json();if(!response.ok)throw Error(data.error||'Video yuklashda xato.');
    toast('Video yuklandi. Endi Nashr etish tugmasini bosing.');await refresh();
  }catch(err){toast(err.message);if(status)status.textContent=err.message;}finally{submit.disabled=false;}
